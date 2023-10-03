@@ -1,4 +1,5 @@
 import ServiceModel from "../models/service.js";
+import DateCoachSchema from "../models/date.js"
 
 export const createService = async (req, res) => {
 	try {
@@ -61,4 +62,43 @@ export const getServicesByCoach = async (req, res) => {
 			message: 'Не удалось получить услуги',
 	  });
 	} 
+}
+
+export const selectServicesByCoachToDate = async (req, res) => {
+	try {
+		const doc = new DateCoachSchema({
+			date: req.body.date,
+			time: req.body.time,
+			serviceId: req.body.serviceId,
+			authorId: req.body.authorId
+		})
+
+		res.json(doc)
+	} catch (err) {
+		res.status(500).json({
+			message: 'Не удалось создать',
+	  });
+	}
+}
+
+export const getServicesDate = async (req, res) => {
+	try {
+
+		idAuthor
+
+		const doc = await DateCoachSchema.find({})
+
+		// const doc = new DateCoachSchema({
+		// 	date: req.body.date,
+		// 	time: req.body.time,
+		// 	serviceId: req.body.serviceId,
+		// 	authorId: req.body.authorId
+		// })
+
+		res.json(doc)
+	} catch (err) {
+		res.status(500).json({
+			message: 'Не удалось создать',
+	  });
+	}
 }
