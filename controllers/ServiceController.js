@@ -184,7 +184,38 @@ export const editServices = async (req, res) => {
 
 		const id = req.body._id
 
-		const service = await ServiceModel.findOneAndUpdate
+		const service = await ServiceModel.findOneAndReplace(
+			{ _id: id}, 
+			{ name: req.body.name, info: req.body.info, _id: id,
+				price: req.body.price, authorId: req.body.authorId,
+			}, { new: true })
+
+		res.json(service)
+	} catch (err) {
+		res.status(500).json({
+			 message: 'err',
+		});
+	}
+}
+
+export const editServicesDate = async (req, res) => {
+	try {
+
+		const id = req.body._id
+
+		const service = await DateCoachSchema.findOneAndReplace({ _id: id}, { date: req.body.date, time: req.body.time}, { new: true })
+
+		res.json(service)
+	} catch (err) {
+		res.status(500).json({
+			 message: 'err',
+		});
+	}
+}
+
+export const getEditServicesDateAdmin = async (req, res) => {
+	try {
+		const service = await DateCoachSchema.find().populate('service')
 
 		res.json(service)
 	} catch (err) {
