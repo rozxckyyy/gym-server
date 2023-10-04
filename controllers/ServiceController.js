@@ -66,14 +66,20 @@ export const getServicesByCoach = async (req, res) => {
 
 export const selectServicesByCoachToDate = async (req, res) => {
 	try {
+		
+		const serviceId = req.body.serviceId
+		// const serviceId = req.body.serviceId
+		const service = await ServiceModel.findById({_id: serviceId})
+
 		const doc = new DateCoachSchema({
 			date: req.body.date,
 			time: req.body.time,
-			serviceId: req.body.serviceId,
+			service: service,
 			authorId: req.body.authorId
 		})
 
-		res.json(doc)
+		const serv = await doc.save()
+		res.json(serv)
 	} catch (err) {
 		res.status(500).json({
 			message: 'Не удалось создать',
@@ -84,21 +90,106 @@ export const selectServicesByCoachToDate = async (req, res) => {
 export const getServicesDate = async (req, res) => {
 	try {
 
-		idAuthor
+		const idAuthor = req.body._id
 
-		const doc = await DateCoachSchema.find({})
-
-		// const doc = new DateCoachSchema({
-		// 	date: req.body.date,
-		// 	time: req.body.time,
-		// 	serviceId: req.body.serviceId,
-		// 	authorId: req.body.authorId
-		// })
+		const doc = await DateCoachSchema.find({authorId: idAuthor}).populate('service')
 
 		res.json(doc)
 	} catch (err) {
 		res.status(500).json({
 			message: 'Не удалось создать',
 	  });
+	}
+}
+
+export const getServicesDateUser = async (req, res) => {
+	try {
+		const idAuthor = req.body.authorId
+		const idService = req.body.serviceId
+
+		const doc = await DateCoachSchema.find({$and : [{authorId: idAuthor}, {userId : { $exists : false }}, {service: {_id: idService}}]}).populate('service')
+
+		res.json(doc)
+	} catch (err) {
+		console.log(err)
+
+		res.status(500).json({
+			message: 'Не удалось получить',
+	  });
+	}
+}
+
+export const signUpToService = async (req, res) => {
+	try {
+		const idService = req.body.serviceId
+		const idUser = req.body.userId
+
+		const doc = await DateCoachSchema.findByIdAndUpdate(idService, {$set: {userId: idUser}}, { new: true }).populate('service')
+		
+		res.json(doc)
+	} catch (err) {
+		console.log(err)
+
+		res.status(500).json({
+			message: 'Не удалось записаться',
+	  });
+	}
+}
+
+export const getServicesDateByUser = async (req, res) => {
+	try {
+		const idUser = req.body.userId
+
+		const doc = await DateCoachSchema.find({userId: idUser}).populate('service').populate('authorId')
+		
+		res.json(doc)
+	} catch (err) {
+		console.log(err)
+
+		res.status(500).json({
+			message: 'Не удалось получить услуги',
+	  });
+	}
+}
+
+export const deliteService = async (req, res) => {
+	try {
+		const idService = req.body.serviceId
+
+		const service = await DateCoachSchema.findByIdAndDelete({ _id: idService })
+
+		res.json(service)
+	} catch (err) {
+		res.status(500).json({
+			 message: 'Не получилось удалить',
+		});
+	}
+}
+
+export const getAllServices = async (req, res) => {
+	try {
+
+		const service = await ServiceModel.find()
+
+		res.json(service)
+	} catch (err) {
+		res.status(500).json({
+			 message: 'err',
+		});
+	}
+}
+
+export const editServices = async (req, res) => {
+	try {
+
+		const id = req.body._id
+
+		const service = await ServiceModel.findOneAndUpdate
+
+		res.json(service)
+	} catch (err) {
+		res.status(500).json({
+			 message: 'err',
+		});
 	}
 }

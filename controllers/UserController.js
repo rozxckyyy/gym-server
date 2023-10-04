@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import { validationResult } from "express-validator";
 
 import UserModel from '../models/user.js'
+import FavoriteModel from '../models/favorite.js';
 
 export const register = async (req, res) => {
 	try {
@@ -226,6 +227,56 @@ export const getAllCoach = async (req, res) => {
 	} catch (err) {
 		res.status(500).json({
 			message: 'Такого пользователя не существует',
+		});
+	};
+}
+
+export const addFavoriteCoach = async (req, res) => {
+	try {
+
+		const userId = req.body.user
+		const coachId = req.body.coach
+
+		const doc = new FavoriteModel({
+			user: userId,
+			coach: coachId
+		})
+
+		await doc.populate('coach')
+
+		const result = await doc.save()
+		res.json(result)
+	} catch (err) {
+		res.status(500).json({
+			message: 'Такого пользователя не существует',
+		});
+	};
+}
+
+export const getFavoriteCoach = async (req, res) => {
+	try {
+		const userId = req.body._id
+
+		const doc = await FavoriteModel.find({user: userId}).populate('coach')
+
+		res.json(doc)
+	} catch (err) {
+		res.status(500).json({
+			message: 'err',
+		});
+	};
+}
+
+export const removeFavoriteCoach = async (req, res) => {
+	try {
+		const id = req.body._id
+
+		const doc = await FavoriteModel.findByIdAndDelete(id)
+
+		res.json(doc)
+	} catch (err) {
+		res.status(500).json({
+			message: 'Не получилось удалить',
 		});
 	};
 }

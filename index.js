@@ -35,6 +35,8 @@ app.post('/admin/upRole', UserController.upRoleUser)
 app.post('/admin/downRole', UserController.downRoleUser)
 app.post('/admin/upRang', UserController.upRangUser)
 app.post('/admin/downRang', UserController.downRangUser)
+app.get('/admin/allServices', ServiceController.getAllServices)
+app.post('/admin/', ServiceController)
 
 app.post('/coach/serviceCreate', checkAuth, ServiceController.createService)
 app.post('/coach/myAllServices', ServiceController.getMyServices)
@@ -43,41 +45,18 @@ app.post('/coach/deliteService', ServiceController.deliteMyService)
 app.get('/getAllCoach', UserController.getAllCoach)
 
 app.post('/servicesByCoach', ServiceController.getServicesByCoach)
+app.post('/servicesDateByCoach', ServiceController.selectServicesByCoachToDate)
+app.post('/servicesDateByCoachAll', ServiceController.getServicesDate)
+app.post('/getServicesDateUser', ServiceController.getServicesDateUser)
+app.post('/signUpToService', ServiceController.signUpToService)
 
+app.post('/getServicesDateByUser', ServiceController.getServicesDateByUser)
+app.post('/deliteService', ServiceController.deliteService)
 
-// app.post('/auth/reg', registerValidation, async (req, res) => {
-// 	const errors = validationResult(req);
-// 	if (!errors.isEmpty()) {
-// 		return res.status(400).json(errors.array())
-// 	}
+app.post('/addFavoriteCoach', UserController.addFavoriteCoach)
+app.post('/getFavoriteCoach', UserController.getFavoriteCoach)
+app.post('/removeFavoriteCoach', UserController.removeFavoriteCoach)
 
-// 	const password = req.body.password;
-// 	const salt = await bcrypt.genSalt(10);
-// 	const passwordHash = await bcrypt.hash(password, salt)
-
-// 	const doc = new UserModel({
-// 		email: req.body.email,
-// 		name: req.body.name,
-// 		passwordHash,
-// 	})
-
-// 	const user = await doc.save()
-
-// 	const token = jwt.sign(
-// 		{
-// 		_id: user._id
-// 		},
-// 		'secret490',
-// 		{
-// 			expiresIn: '30d'
-// 		}
-// 	)
-
-// 	res.json({
-// 		...user._doc,
-// 		token
-// 	})
-// })
 
 app.listen(4444, (err) => {
 	if (err) { 

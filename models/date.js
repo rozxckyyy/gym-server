@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const DateCoachSchema = new mongoose.Schema({
 	date: {
@@ -9,14 +9,20 @@ const DateCoachSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-    serviceId: {
-        type: String,
+	service: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Service',
 		required: true,
-    },
-    authorId: {
-        type: String,
+	},
+	authorId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
 		required: true,
-    }
+	},
+	userId: {
+		type: String,
+		required: false
+	}
 },
 {
 	timestamps: true
