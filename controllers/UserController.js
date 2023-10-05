@@ -21,8 +21,8 @@ export const register = async (req, res) => {
 		}
 
 		const password = req.body.password;
-		const salt = await bcrypt.genSalt(10);
-		const hash = await bcrypt.hash(password, salt);
+		const salt = await bcrypt.genSalt(10); // Генерируем соль
+		const hash = await bcrypt.hash(password, salt); // Хэгируем пароль при помощи сгенерированной соли
 
 		const doc = new UserModel({
 			email: req.body.email,
@@ -32,13 +32,13 @@ export const register = async (req, res) => {
 
 		const user = await doc.save();
 
-		const token = jwt.sign(
+		const token = jwt.sign( //Создаем токен, в который мы кидаем id и шифруем его по ключу
 			{
 				_id: user._id,
 			},
-			"secret123",
+			"secret123", // вот этот ключ
 			{
-				expiresIn: "30d",
+				expiresIn: "30d", // время действия токена
 			}
 		);
 
@@ -77,13 +77,13 @@ export const login = async (req, res) => {
 			});
 		}
 
-		const token = jwt.sign(
+		const token = jwt.sign( //Создаем токен, в который мы кидаем id и шифруем его по ключу
 			{
 				_id: user._id,
 			},
-			"secret123",
+			"secret123", // вот этот ключ
 			{
-				expiresIn: "30d",
+				expiresIn: "30d", // время действия токена
 			}
 		);
 

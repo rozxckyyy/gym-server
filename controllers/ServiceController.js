@@ -1,5 +1,6 @@
 import ServiceModel from "../models/service.js";
 import DateCoachSchema from "../models/date.js"
+import service from "../models/service.js";
 
 export const createService = async (req, res) => {
 	try {
@@ -136,6 +137,24 @@ export const signUpToService = async (req, res) => {
 	}
 }
 
+export const signUpToServiceDiscount = async (req, res) => {
+	try {
+		const idService = req.body.serviceId
+		const idUser = req.body.userId
+		const dicount = req.body.price * 0.8
+
+		const doc = await DateCoachSchema.findOneAndUpdate({_id: idService},{$set: { discountPrice: dicount, userId: idUser}},{new: true}).populate('service')
+
+		res.json(doc)
+	} catch (err) {
+		console.log(err)
+
+		res.status(500).json({
+			message: 'Не удалось записаться',
+	  });
+	}
+}
+
 export const getServicesDateByUser = async (req, res) => {
 	try {
 		const idUser = req.body.userId
@@ -187,8 +206,8 @@ export const editServices = async (req, res) => {
 		const service = await ServiceModel.findOneAndReplace(
 			{ _id: id}, 
 			{ name: req.body.name, info: req.body.info, _id: id,
-				price: req.body.price, authorId: req.body.authorId,
-			}, { new: true })
+			price: req.body.price, authorId: req.body.authorId}, 
+			{ new: true })
 
 		res.json(service)
 	} catch (err) {
@@ -198,12 +217,16 @@ export const editServices = async (req, res) => {
 	}
 }
 
-export const editServicesDate = async (req, res) => {
+export const editServicesDateAdmin = async (req, res) => {
 	try {
 
 		const id = req.body._id
 
-		const service = await DateCoachSchema.findOneAndReplace({ _id: id}, { date: req.body.date, time: req.body.time}, { new: true })
+		const service = await DateCoachSchema.findOneAndReplace(
+			{ _id: id}, 
+			{ date: req.body.date, time: req.body.time, _id: id,
+			authorId: req.body.authorId, service: req.body.service}, 
+			{ new: true }).populate('service')
 
 		res.json(service)
 	} catch (err) {
@@ -213,7 +236,7 @@ export const editServicesDate = async (req, res) => {
 	}
 }
 
-export const getEditServicesDateAdmin = async (req, res) => {
+export const getServicesDateAdmin = async (req, res) => {
 	try {
 		const service = await DateCoachSchema.find().populate('service')
 

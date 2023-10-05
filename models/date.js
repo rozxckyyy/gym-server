@@ -9,6 +9,10 @@ const DateCoachSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	discountPrice: {
+		type: Number,
+		required: false,
+	},
 	service: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Service',
@@ -22,7 +26,7 @@ const DateCoachSchema = new mongoose.Schema({
 	userId: {
 		type: String,
 		required: false
-	}
+	},
 },
 {
 	timestamps: true
