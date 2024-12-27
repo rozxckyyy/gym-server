@@ -1,6 +1,8 @@
 import ServiceModel from "../models/service.js";
 import DateCoachSchema from "../models/date.js"
 import service from "../models/service.js";
+import UserModel from '../models/user.js'
+import bcrypt from 'bcrypt'
 
 export const createService = async (req, res) => {
 	try {
@@ -245,5 +247,22 @@ export const getServicesDateAdmin = async (req, res) => {
 		res.status(500).json({
 			 message: 'err',
 		});
+	}
+}
+
+export const editPasswordAdmin = async (req, res) => {
+	try {
+		const user = await UserModel.findById(req.body.id);
+
+		const password = req.body.password;
+		const salt = await bcrypt.genSalt(10); // Генерируем соль
+		const hash = await bcrypt.hash(password, salt); // Хэгируем пароль при помощи сгенерированной соли
+
+		user.passwordHash = hash;
+
+		user.save()
+		res.json(user)
+	} catch(err) {
+		res.status(400)
 	}
 }

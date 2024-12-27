@@ -12,7 +12,7 @@ import { validationResult } from "express-validator";
 import checkAuth from './utils/checkAuth.js';
 
 
-mongoose.connect('mongodb+srv://admin:sssssssssss@gym.pvpedbv.mongodb.net/gym?retryWrites=true&w=majority') // подключение к бд
+mongoose.connect('mongodb+srv://admin:gY3NfpUwfmk3SQ5b@cluster0.czys5.mongodb.net/') // подключение к бд
 .then(() => console.log('DB ok'))
 .catch((err) => console.log('DB error:', err))
 
@@ -37,6 +37,7 @@ app.get('/admin/allServices', ServiceController.getAllServices)  // Получе
 app.post('/admin/editService', ServiceController.editServices) // Изменение услуги
 app.get('/admin/allServicesDate', ServiceController.getServicesDateAdmin) // Получение услуг с расписанием
 app.post('/admin/editServicesDate', ServiceController.editServicesDateAdmin) // Изменение услуги с расписанием
+app.post('/admin/editPassword', ServiceController.editPasswordAdmin) // Изменение пароля
 
 app.post('/coach/serviceCreate', checkAuth, ServiceController.createService) // Создание услуги
 app.post('/coach/myAllServices', ServiceController.getMyServices) // Получение собственных улсуг для тренера
